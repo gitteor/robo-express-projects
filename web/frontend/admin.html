@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 - Robo Express 물류 시스템</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .admin-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .admin-header {
+      text-align: center;
+      padding: 30px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 30px;
+    }
+    .admin-header h1 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+    .admin-header p {
+      color: var(--text-secondary);
+    }
+    .control-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .control-card h2 {
+      font-size: 1rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .status-badge.stopped {
+      background: #FEE2E2;
+      color: #DC2626;
+    }
+    .status-badge.running {
+      background: #D1FAE5;
+      color: #059669;
+    }
+    .status-badge.simulation {
+      background: #E0E7FF;
+      color: #4F46E5;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .status-badge.running .status-dot {
+      animation: blink 1s ease-in-out infinite;
+    }
+    .control-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .btn-control {
+      flex: 1;
+      padding: 16px;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-start {
+      background: #10B981;
+      color: white;
+    }
+    .btn-start:hover {
+      background: #059669;
+    }
+    .btn-stop {
+      background: #EF4444;
+      color: white;
+    }
+    .btn-stop:hover {
+      background: #DC2626;
+    }
+    .speed-control {
+      margin-top: 20px;
+    }
+    .speed-control label {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .speed-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .speed-slider {
+      flex: 1;
+      height: 8px;
+      -webkit-appearance: none;
+      background: var(--border);
+      border-radius: 4px;
+      outline: none;
+    }
+    .speed-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .speed-value {
+      min-width: 50px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .info-item {
+      background: var(--background);
+      padding: 16px;
+      border-radius: var(--radius-md);
+    }
+    .info-item .label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .info-item .value {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .log-container {
+      margin-top: 20px;
+      max-height: 150px;
+      overflow-y: auto;
+      background: #1a1a2e;
+      border-radius: var(--radius-md);
+      padding: 12px;
+      font-family: monospace;
+      font-size: 0.8rem;
+    }
+    .log-entry {
+      color: #4ade80;
+      padding: 2px 0;
+    }
+    .log-entry.error {
+      color: #f87171;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <a href="index.html" class="back-link">
+      ← 메인으로 돌아가기
+    </a>
+
+    <div class="admin-header">
+      <h1>🔧 관리자 페이지</h1>
+      <p>시스템 상태 확인 및 수동 제어</p>
+    </div>
+
+    <!-- 컨베이어 제어 -->
+    <div class="control-card">
+      <h2>�icing 컨베이어 제어</h2>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span>현재 상태</span>
+        <span class="status-badge stopped" id="conveyorStatus">
+          <span class="status-dot"></span>
+          <span id="statusText">확인 중...</span>
+        </span>
+      </div>
+
+      <div class="control-buttons">
+        <button class="btn-control btn-start" id="btnStart">▶ 시작</button>
+        <button class="btn-control btn-stop" id="btnStop">⏹ 정지</button>
+      </div>
+
+      <div class="speed-control">
+        <label>속도 조절 (0-255)</label>
+        <div class="speed-row">
+          <input type="range" class="speed-slider" id="speedSlider" min="0" max="255" value="200">
+          <span class="speed-value" id="speedValue">200</span>
+        </div>
+      </div>
+
+      <div class="log-container" id="logContainer">
+        <div class="log-entry">시스템 준비 완료</div>
+      </div>
+    </div>
+
+    <!-- 시스템 정보 -->
+    <div class="control-card">
+      <h2>📊 시스템 정보</h2>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="label">대기 중인 주문</div>
+          <div class="value" id="pendingOrders">0</div>
+        </div>
+        <div class="info-item">
+          <div class="label">완료된 주문</div>
+          <div class="value" id="completedOrders">0</div>
+        </div>
+        <div class="info-item">
+          <div class="label">서버 상태</div>
+          <div class="value" style="color: #10B981;">● 정상</div>
+        </div>
+        <div class="info-item">
+          <div class="label">연결 모드</div>
+          <div class="value" id="connectionMode">-</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = '';
+    let currentSpeed = 200;
+
+    // DOM Elements
+    const conveyorStatus = document.getElementById('conveyorStatus');
+    const statusText = document.getElementById('statusText');
+    const btnStart = document.getElementById('btnStart');
+    const btnStop = document.getElementById('btnStop');
+    const speedSlider = document.getElementById('speedSlider');
+    const speedValue = document.getElementById('speedValue');
+    const logContainer = document.getElementById('logContainer');
+    const connectionMode = document.getElementById('connectionMode');
+
+    // 상태 조회
+    async function fetchStatus() {
+      try {
+        const response = await fetch(`${API_URL}/api/conveyor/status`);
+        const data = await response.json();
+        updateStatusDisplay(data);
+      } catch (error) {
+        console.error('Status fetch error:', error);
+      }
+    }
+
+    function updateStatusDisplay(data) {
+      const state = data.state;
+      statusText.textContent = state;
+      connectionMode.textContent = data.connected ? '실제 연결' : '시뮬레이션';
+      
+      conveyorStatus.className = 'status-badge';
+      if (state === 'FORWARD' || state === 'REVERSE') {
+        conveyorStatus.classList.add('running');
+      } else if (state === 'SIMULATION') {
+        conveyorStatus.classList.add('simulation');
+      } else {
+        conveyorStatus.classList.add('stopped');
+      }
+      
+      if (data.speed !== undefined) {
+        currentSpeed = data.speed;
+        speedSlider.value = data.speed;
+        speedValue.textContent = data.speed;
+      }
+    }
+
+    function addLog(message, isError = false) {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry' + (isError ? ' error' : '');
+      const time = new Date().toLocaleTimeString('ko-KR', { hour12: false });
+      entry.textContent = `[${time}] ${message}`;
+      logContainer.appendChild(entry);
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    // 시작 버튼
+    btnStart.addEventListener('click', async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/conveyor/start`, { method: 'POST' });
+        const data = await response.json();
+        addLog('컨베이어 시작');
+        fetchStatus();
+      } catch (error) {
+        addLog('시작 실패: ' + error.message, true);
+      }
+    });
+
+    // 정지 버튼
+    btnStop.addEventListener('click', async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/conveyor/stop`, { method: 'POST' });
+        const data = await response.json();
+        addLog('컨베이어 정지');
+        fetchStatus();
+      } catch (error) {
+        addLog('정지 실패: ' + error.message, true);
+      }
+    });
+
+    // 속도 조절
+    speedSlider.addEventListener('input', () => {
+      speedValue.textContent = speedSlider.value;
+    });
+
+    speedSlider.addEventListener('change', async () => {
+      const speed = parseInt(speedSlider.value);
+      try {
+        const response = await fetch(`${API_URL}/api/conveyor/speed/${speed}`, { method: 'POST' });
+        const data = await response.json();
+        addLog(`속도 변경: ${speed}`);
+      } catch (error) {
+        addLog('속도 변경 실패: ' + error.message, true);
+      }
+    });
+
+    // 초기화
+    fetchStatus();
+    setInterval(fetchStatus, 3000);
+  </script>
+</body>
+</html>

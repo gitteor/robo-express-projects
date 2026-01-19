@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품 선택 - Robo Express 물류 시스템</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <a href="index.html" class="header-back">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+      </a>
+      <h1 class="header-title">상품 선택</h1>
+      <div class="header-cart" id="headerCart">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </div>
+    </header>
+
+    <!-- Product List -->
+    <main class="product-section">
+      <div class="section-title">
+        <h2>상품을 선택해주세요</h2>
+        <p>원하는 상품의 수량을 조절하세요</p>
+      </div>
+
+      <div class="product-grid" id="productGrid">
+        <!-- Product Card 1 -->
+        <div class="product-card" data-product-id="cube_a">
+          <div class="product-image">
+            <img src="images/cube_a.png" alt="칸쵸" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 100 100%22><rect fill=%22%23FF6B6B%22 width=%22100%22 height=%22100%22 rx=%2210%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2230%22>A</text></svg>'">
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">칸쵸</h3>
+            <p class="product-desc">265kcal</p>
+            <p class="product-price">₩1,500</p>
+          </div>
+          <div class="product-quantity">
+            <button class="qty-btn qty-minus" data-action="minus">−</button>
+            <span class="qty-value" data-qty="0">0</span>
+            <button class="qty-btn qty-plus" data-action="plus">+</button>
+          </div>
+        </div>
+
+        <!-- Product Card 2 -->
+        <div class="product-card" data-product-id="cube_b">
+          <div class="product-image">
+            <img src="images/cube_b.png" alt="초코송이" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 100 100%22><rect fill=%22%234ECDC4%22 width=%22100%22 height=%22100%22 rx=%2210%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2230%22>B</text></svg>'">
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">초코송이</h3>
+            <p class="product-desc">266kcal</p>
+            <p class="product-price">₩1,200</p>
+          </div>
+          <div class="product-quantity">
+            <button class="qty-btn qty-minus" data-action="minus">−</button>
+            <span class="qty-value" data-qty="0">0</span>
+            <button class="qty-btn qty-plus" data-action="plus">+</button>
+          </div>
+        </div>
+
+        <!-- Product Card 3 -->
+        <div class="product-card" data-product-id="cube_c">
+          <div class="product-image">
+            <img src="images/cube_c.png" alt="고래밥" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 100 100%22><rect fill=%22%23FFE66D%22 width=%22100%22 height=%22100%22 rx=%2210%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23333%22 font-size=%2230%22>C</text></svg>'">
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">고래밥</h3>
+            <p class="product-desc">206kcal</p>
+            <p class="product-price">₩800</p>
+          </div>
+          <div class="product-quantity">
+            <button class="qty-btn qty-minus" data-action="minus">−</button>
+            <span class="qty-value" data-qty="0">0</span>
+            <button class="qty-btn qty-plus" data-action="plus">+</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Cart Summary & Order Button -->
+    <footer class="order-footer" id="orderFooter">
+      <div class="cart-summary">
+        <div class="cart-info">
+          <span class="cart-count"><span id="totalCount">0</span>개 상품</span>
+          <span class="cart-total">₩<span id="totalPrice">0</span></span>
+        </div>
+        <div class="cart-items" id="cartItems">
+          <!-- 선택된 상품 목록 -->
+        </div>
+      </div>
+      <button class="btn-order" id="btnOrder" disabled>
+        <span>주문하기</span>
+      </button>
+    </footer>
+  </div>
+
+  <!-- Order Confirm Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="orderModal">
+      <div class="modal-header">
+        <h2>주문 확인</h2>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="order-summary" id="orderSummary">
+          <!-- 주문 요약 -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="btnCancel">취소</button>
+        <button class="btn-confirm" id="btnConfirm">주문 확정</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <p>주문을 처리하고 있습니다...</p>
+  </div>
+
+  <script src="js/products.js"></script>
+</body>
+</html>

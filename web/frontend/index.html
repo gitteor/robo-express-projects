@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robo Express</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .voice-hint {
+      font-size: 0.9rem;
+      color: #4fc3f7;
+      margin-top: 8px;
+    }
+    .assistant-link {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: rgba(79, 195, 247, 0.2);
+      color: #4fc3f7;
+      text-decoration: none;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    .assistant-link:hover {
+      background: rgba(79, 195, 247, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="start-screen">
+    <div class="start-content">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <img src="images/robot_arm.png" alt="로봇팔" class="robot-image">
+        </div>
+        <h1 class="logo-title">Robo Express</h1>
+        <p class="logo-subtitle">로봇 물류 배송 시스템</p>
+      </div>
+      
+      <div class="start-description">
+        <p>원하는 상품을 선택하면</p>
+        <p>로봇이 자동으로 포장해드립니다</p>
+      </div>
+
+      <a href="products.html" class="btn-start" onclick="playWelcome(event)">
+        <span>주문하기</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+      
+      <audio id="welcomeAudio" preload="auto">
+        <source src="audio/welcome.mp3" type="audio/mpeg">
+      </audio>
+      
+      <script>
+        function playWelcome(event) {
+          event.preventDefault();
+          const audio = document.getElementById('welcomeAudio');
+          audio.play();
+          setTimeout(() => {
+            window.location.href = 'products.html';
+          }, 3600);
+        }
+      </script>
+
+      <div class="start-footer">
+        <p>화면을 터치하여 시작하세요</p>
+        <p class="voice-hint">또는 "로보야" 라고 불러보세요</p>
+      </div>
+      
+      <a href="assistant.html" class="assistant-link">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+          <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+        </svg>
+        AI 비서
+      </a>
+    </div>
+    
+    <!-- 호출어 감지 -->
+    <script>
+      let recognition;
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.lang = 'ko-KR';
+        recognition.continuous = true;
+        recognition.interimResults = false;
+        
+        recognition.onresult = (event) => {
+          const last = event.results.length - 1;
+          const transcript = event.results[last][0].transcript.trim();
+          console.log('Heard:', transcript);
+          
+          if (transcript.includes('로보야') || transcript.includes('로보아') || transcript.includes('로봐')) {
+            recognition.stop();
+            window.location.href = 'assistant.html';
+          }
+        };
+        
+        recognition.onerror = (event) => {
+          if (event.error !== 'no-speech') {
+            setTimeout(() => recognition.start(), 1000);
+          }
+        };
+        
+        recognition.onend = () => {
+          setTimeout(() => recognition.start(), 100);
+        };
+        
+        recognition.start();
+      }
+    </script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주문 현황 - Robo Express 물류 시스템</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <a href="index.html" class="header-back">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+      </a>
+      <h1 class="header-title">주문 현황</h1>
+      <div class="header-spacer"></div>
+    </header>
+
+    <!-- Order Status -->
+    <main class="order-status-section">
+      <!-- Order Info (숨김) -->
+      <div class="order-info-card" style="display: none;">
+        <div class="order-number">
+          <span class="label">주문번호</span>
+          <span class="value" id="orderNumber">-</span>
+        </div>
+        <div class="order-time">
+          <span class="label">주문시간</span>
+          <span class="value" id="orderTime">-</span>
+        </div>
+      </div>
+
+      <!-- Status Display -->
+      <div class="status-card">
+        <div class="status-icon" id="statusIcon">
+          <div class="status-icon-inner">📦</div>
+        </div>
+        <h2 class="status-title" id="statusTitle">주문 접수됨</h2>
+        <p class="status-message" id="statusMessage">주문이 접수되었습니다. 잠시만 기다려주세요.</p>
+        
+        <!-- Progress Bar -->
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+          </div>
+          <div class="progress-text">
+            <span id="progressText">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step Tracker -->
+      <div class="step-tracker">
+        <h3>진행 상황</h3>
+        <div class="steps" id="stepsContainer">
+          <!-- Steps will be dynamically inserted -->
+        </div>
+      </div>
+
+      <!-- Live Log -->
+      <div class="live-log-card">
+        <div class="log-header">
+          <h3>실시간 로그</h3>
+          <span class="live-indicator">
+            <span class="live-dot"></span>
+            LIVE
+          </span>
+        </div>
+        <div class="log-container" id="logContainer">
+          <div class="log-entry">
+            <span class="log-time">--:--:--</span>
+            <span class="log-message">연결 대기 중...</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Complete Actions -->
+    <footer class="order-complete-footer" id="completeFooter" style="display: none;">
+      <div class="complete-message">
+        <span class="complete-icon">✅</span>
+        <span>주문이 완료되었습니다!</span>
+      </div>
+      <a href="index.html" class="btn-new-order">새 주문하기</a>
+    </footer>
+  </div>
+
+  <script src="js/order-status.js"></script>
+</body>
+</html>
