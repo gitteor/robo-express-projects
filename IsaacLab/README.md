@@ -1,4 +1,4 @@
-# Isaac - 강화학습 환경
+# IsaacLab - 강화학습 환경
 
 Doosan E0509 박스 스태킹 강화학습 환경 (IsaacLab Extension)
 
@@ -8,13 +8,13 @@ Doosan E0509 박스 스태킹 강화학습 환경 (IsaacLab Extension)
 
 - Ubuntu 22.04
 - NVIDIA GPU (RTX 3070 이상 권장)
-- NVIDIA Isaac Sim 4.x
-- Isaac Lab 설치 완료
+- NVIDIA Isaac Sim 5.1
+- IsaacLab 설치 완료
 
 ### Extension 설치
 
 ```bash
-${ISAACLAB_PATH}/isaaclab.sh -p -m pip install -e .
+# 추후 작성
 ```
 
 ## 사용법
@@ -22,24 +22,22 @@ ${ISAACLAB_PATH}/isaaclab.sh -p -m pip install -e .
 ### 학습
 
 ```bash
-${ISAACLAB_PATH}/isaaclab.sh -p scripts/train.py --task RoboExpress-BoxStacking-v0
+# 추후 작성
 ```
 
 ### 테스트
 
 ```bash
-${ISAACLAB_PATH}/isaaclab.sh -p scripts/play.py --checkpoint checkpoints/model.pt
+# 추후 작성
 ```
 
 ## 폴더 구조
 
 ```
-isaac/
-├── exts/robo_express/      # IsaacLab extension
-│   ├── tasks/              # RL 환경 정의
-│   ├── robots/             # 로봇 설정
-│   └── assets/             # USD 모델
-├── scripts/                # 학습/실행 스크립트
-├── configs/                # 학습 설정
-└── checkpoints/            # 학습된 모델
+IsaacLab/
+├── logs/                       # 학습 로그 및 모델
+├── scripts/                    # 학습/실행 스크립트
+└── source/
+    ├── isaaclab_assets/        # USD 모델
+    └── isaaclab_tasks/         # RL 환경 정의
 ```
